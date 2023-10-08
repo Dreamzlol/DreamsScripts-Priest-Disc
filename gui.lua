@@ -58,7 +58,7 @@ status_frame:Button({
 status_frame:Button({
     spellId = 48171,
     var = "use_ooc",
-    text = "Out of Combat",
+    text = "Ooc",
     size = 30
 })
 
@@ -94,7 +94,7 @@ welcome:Text({
     text = "|cffFF0099discord.gg/axWkr4sFMJ",
 })
 
-local mode = gui:Tab(awful.textureEscape(48160, 16) .. " Rotation Mode")
+local mode = gui:Tab(awful.textureEscape(48066, 16) .. " Rotation Mode")
 mode:Text({
     text = "|cff00B5FFRotation Mode",
     header = true,
@@ -105,8 +105,8 @@ mode:Dropdown({
     var = "mode",
     tooltip = "Select the Rotation Mode.",
     options = {
-        { label = awful.textureEscape(15336, 16) .. " PvE", value = "PvE", tooltip = "Use PvE Rotation" },
-        { label = awful.textureEscape(15487, 16) .. " PvP", value = "PvP", tooltip = "Use PvP Rotation" },
+        { label = "PvE", value = "PvE", tooltip = "Use PvE Rotation" },
+        { label = "PvP", value = "PvP", tooltip = "Use PvP Rotation" },
     },
     placeholder = "None",
     header = "Select Rotation Mode",
@@ -114,7 +114,7 @@ mode:Dropdown({
 
 local spells = gui:Tab(awful.textureEscape(53007, 16) .. " Spell Settings")
 spells:Text({
-    text = "|cff00B5FFSpell Settings",
+    text = "|cff00B5FFSpell Settings (PvE)",
     header = true,
     paddingBottom = 10,
 })
@@ -258,9 +258,20 @@ spells:Dropdown({
     default = { "Execute", "Bloodlust", "Pull" }
 })
 
+spells:Text({
+    text = "|cff00B5FFSpell Settings (PvP)",
+    header = true,
+    paddingBottom = 10,
+})
+
+spells:Text({
+    text = "|cff00B5FFNo Spell Settings for PvP",
+    paddingBottom = 10,
+})
+
 local toggles = gui:Tab(awful.textureEscape(6064, 16) .. " Toggles")
 toggles:Text({
-    text = "|cff00B5FFToggles",
+    text = "|cff00B5FFToggles (PvE)",
     header = true,
     paddingBottom = 10,
 })
@@ -369,6 +380,17 @@ toggles:Checkbox({
     var = "use_cure_disease",
     tooltip = "Use Cure Disease on unit that has a Disease",
     default = true
+})
+
+toggles:Text({
+    text = "|cff00B5FFToggles (PvP)",
+    header = true,
+    paddingBottom = 10,
+})
+
+toggles:Text({
+    text = "|cff00B5FFNo Toggles for PvP",
+    paddingBottom = 10,
 })
 
 local macros = gui:Tab(awful.textureEscape(1706, 16) .. " Macros")
