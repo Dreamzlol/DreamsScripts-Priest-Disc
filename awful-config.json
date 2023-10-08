@@ -1,0 +1,11 @@
+{
+    "load": [
+        "core",
+        "gui",
+        "pve/apl",
+        "pve/spells",
+        "pvp/apl",
+        "pvp/spells",
+        "actor"
+    ]
+}
