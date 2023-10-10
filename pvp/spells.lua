@@ -260,6 +260,7 @@ prayer_of_mending:Callback(function(spell)
         return
     end
 
+    print("Debug: PvP")
     awful.fullGroup.loop(function(friend)
         if friend.buff(41635) then
             return

@@ -423,6 +423,7 @@ prayer_of_mending:Callback("tank", function(spell)
     --if not is_tank(friend) then
     --    return
     --end
+    print("Debug: PvE")
     if friend.buff("Prayer of Mending") then
         return
     end
