@@ -445,6 +445,16 @@ holy_nova:Callback("snakes", function(spell)
     end
 end)
 
+holy_nova:Callback("moving", function(spell)
+    if player.moving and player.hp < 40 then
+        if spell:Cast() then
+            awful.alert(spell.name, spell.id)
+            return
+        end
+    end
+end)
+
+
 holy_nova:Callback("stealth", function(spell)
     awful.enemies.loop(function(enemy)
         if enemy.buff(51713) then
