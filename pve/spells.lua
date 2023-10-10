@@ -114,7 +114,6 @@ fear_ward:Callback(function(spell)
     if player.buff("Fear Ward") then
         return
     end
-
     local enemy = awful.enemies.within(40).filter(unit_filter).lowest
     if on_cast[enemy.casting] then
         spell_stop_casting()
@@ -133,7 +132,6 @@ cure_disease:Callback(function(spell)
     if not rotation.settings.use_cure_disease then
         return
     end
-
     awful.fullGroup.within(40).filter(unit_filter).loop(function(friend)
         if not friend then
             return
@@ -165,7 +163,6 @@ dispel_magic:Callback(function(spell)
     if not rotation.settings.use_dispel_magic then
         return
     end
-
     awful.fullGroup.within(40).filter(unit_filter).loop(function(friend)
         if not friend then
             return
@@ -190,7 +187,6 @@ penance:Callback(function(spell)
     if target.cast == "Ground Tremor" or target.cast == "Flame Jets" then
         return
     end
-
     local friend = awful.fullGroup.within(40).filter(unit_filter).lowest
     if not friend then
         return
@@ -424,9 +420,9 @@ prayer_of_mending:Callback("tank", function(spell)
     if not friend then
         return
     end
-    if not is_tank(friend) then
-        return
-    end
+    --if not is_tank(friend) then
+    --    return
+    --end
     if friend.buff("Prayer of Mending") then
         return
     end
