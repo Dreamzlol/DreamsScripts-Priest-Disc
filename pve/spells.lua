@@ -420,10 +420,9 @@ prayer_of_mending:Callback("tank", function(spell)
     if not friend then
         return
     end
-    --if not is_tank(friend) then
-    --    return
-    --end
-    print("Debug: PvE")
+    if not is_tank(friend) then
+        return
+    end
     if friend.buff("Prayer of Mending") then
         return
     end
