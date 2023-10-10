@@ -41,7 +41,7 @@ local tank_buffs = {
 }
 
 local function is_tank(unit)
-    if unit.role == "Tank" or unit.aggro or unit.threat == 3 then
+    if unit.role == "tank" or unit.aggro or unit.threat == 3 then
         return true
     end
 
