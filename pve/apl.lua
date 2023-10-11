@@ -2,9 +2,6 @@ local Unlocker, awful, rotation = ...
 local disc = rotation.priest.disc
 local player = awful.player
 
-if not rotation.settings.mode == "PvE" then
-    return
-end
 if player.class2 ~= "PRIEST" then
     return
 end

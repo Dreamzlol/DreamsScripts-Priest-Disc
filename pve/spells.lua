@@ -3,10 +3,6 @@ local disc = rotation.priest.disc
 local Spell = awful.Spell
 local player, target = awful.player, awful.target
 
-if not rotation.settings.mode == "PvE" then
-    return
-end
-
 awful.Populate({
     pve_penance           = Spell(53007, { beneficial = true }),
     pve_power_word_shield = Spell(48066, { beneficial = true, ignoreUsable = true }),

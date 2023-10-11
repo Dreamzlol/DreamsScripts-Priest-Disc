@@ -3,9 +3,6 @@ local disc = rotation.priest.disc
 local Spell = awful.Spell
 local player, target, focus = awful.player, awful.target, awful.focus
 
-if not rotation.settings.mode == "PvP" then
-    return
-end
 if player.class2 ~= "PRIEST" then
     return
 end
