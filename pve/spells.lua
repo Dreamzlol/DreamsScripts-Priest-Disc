@@ -4,22 +4,22 @@ local Spell = awful.Spell
 local player, target = awful.player, awful.target
 
 awful.Populate({
-    penance           = Spell(53007, { beneficial = true }),
-    power_word_shield = Spell(48066, { beneficial = true, ignoreUsable = true }),
-    prayer_of_mending = Spell(48113, { beneficial = true }),
-    inner_fire        = Spell(48168, { beneficial = true }),
-    flash_heal        = Spell(48071, { beneficial = true }),
-    renew             = Spell(48068, { beneficial = true }),
-    pain_supression   = Spell(33206, { beneficial = true }),
-    binding_heal      = Spell(48120, { beneficial = true }),
-    desperate_prayer  = Spell(48173, { beneficial = true }),
-    power_infusion    = Spell(10060, { beneficial = true }),
-    cure_disease      = Spell(528, { beneficial = true }),
-    dispel_magic      = Spell(988, { beneficial = true }),
-    shadowfiend       = Spell(34433),
-    hymn_of_hope      = Spell(64901),
-    fear_ward         = Spell(6346, { ignoreCasting = true }),
-    mass_dispel       = Spell(32375, { ignoreFacing = true, radius = 15 }),
+    pve_penance           = Spell(53007, { beneficial = true }),
+    pve_power_word_shield = Spell(48066, { beneficial = true, ignoreUsable = true }),
+    pve_prayer_of_mending = Spell(48113, { beneficial = true }),
+    pve_inner_fire        = Spell(48168, { beneficial = true }),
+    pve_flash_heal        = Spell(48071, { beneficial = true }),
+    pve_renew             = Spell(48068, { beneficial = true }),
+    pve_pain_supression   = Spell(33206, { beneficial = true }),
+    pve_binding_heal      = Spell(48120, { beneficial = true }),
+    pve_desperate_prayer  = Spell(48173, { beneficial = true }),
+    pve_power_infusion    = Spell(10060, { beneficial = true }),
+    pve_cure_disease      = Spell(528, { beneficial = true }),
+    pve_dispel_magic      = Spell(988, { beneficial = true }),
+    pve_shadowfiend       = Spell(34433),
+    pve_hymn_of_hope      = Spell(64901),
+    pve_fear_ward         = Spell(6346, { ignoreCasting = true }),
+    pve_mass_dispel       = Spell(32375, { ignoreFacing = true, radius = 15 }),
 }, disc, getfenv(1))
 
 local spell_stop_casting = awful.unlock("SpellStopCasting")
@@ -88,7 +88,7 @@ local md_filter = function(obj, estimated_distance_to_cast_position)
     end
 end
 
-mass_dispel:Callback(function(spell)
+pve_mass_dispel:Callback(function(spell)
     local friend = awful.fullGroup.within(30).filter(unit_filter).lowest
     if has_dispel_debuff(friend) then
         if spell:SmartAoE(friend, {
@@ -110,7 +110,7 @@ local on_cast = {
     ["Terrifying Screech"] = true
 }
 
-fear_ward:Callback(function(spell)
+pve_fear_ward:Callback(function(spell)
     if player.buff("Fear Ward") then
         return
     end
@@ -128,7 +128,7 @@ local debuff_disease = {
     ["Disease"] = true
 }
 
-cure_disease:Callback(function(spell)
+pve_cure_disease:Callback(function(spell)
     if not rotation.settings.use_cure_disease then
         return
     end
@@ -159,7 +159,7 @@ local debuff_name = {
     ["Cone of Cold"] = true
 }
 
-dispel_magic:Callback(function(spell)
+pve_dispel_magic:Callback(function(spell)
     if not rotation.settings.use_dispel_magic then
         return
     end
@@ -180,7 +180,7 @@ dispel_magic:Callback(function(spell)
     end)
 end)
 
-penance:Callback(function(spell)
+pve_penance:Callback(function(spell)
     if not rotation.settings.use_penance then
         return
     end
@@ -206,8 +206,7 @@ penance:Callback(function(spell)
     end
 end)
 
-
-penance:Callback("tank", function(spell)
+pve_penance:Callback("tank", function(spell)
     if not rotation.settings.use_penance_tank then
         return
     end
@@ -234,8 +233,7 @@ penance:Callback("tank", function(spell)
     end
 end)
 
-
-pain_supression:Callback(function(spell)
+pve_pain_supression:Callback(function(spell)
     if not rotation.settings.use_pain_supression_tank then
         return
     end
@@ -255,7 +253,7 @@ pain_supression:Callback(function(spell)
     end
 end)
 
-power_word_shield:Callback("tank", function(spell)
+pve_power_word_shield:Callback("tank", function(spell)
     if not rotation.settings.use_power_word_shield_tank then
         return
     end
@@ -281,7 +279,7 @@ power_word_shield:Callback("tank", function(spell)
     end
 end)
 
-power_word_shield:Callback(function(spell)
+pve_power_word_shield:Callback(function(spell)
     if not rotation.settings.use_power_word_shield then
         return
     end
@@ -307,7 +305,7 @@ power_word_shield:Callback(function(spell)
     end
 end)
 
-power_word_shield:Callback("pre", function(spell)
+pve_power_word_shield:Callback("pre", function(spell)
     if not rotation.settings.use_power_word_shield_pre_shield then
         return
     end
@@ -332,7 +330,7 @@ power_word_shield:Callback("pre", function(spell)
     end)
 end)
 
-inner_fire:Callback(function(spell)
+pve_inner_fire:Callback(function(spell)
     if not rotation.settings.use_inner_fire then
         return
     end
@@ -345,7 +343,7 @@ inner_fire:Callback(function(spell)
     end
 end)
 
-flash_heal:Callback(function(spell)
+pve_flash_heal:Callback(function(spell)
     if not rotation.settings.use_flash_heal then
         return
     end
@@ -371,8 +369,7 @@ flash_heal:Callback(function(spell)
     end
 end)
 
-
-shadowfiend:Callback(function(spell)
+pve_shadowfiend:Callback(function(spell)
     if not rotation.settings.use_shadowfiend then
         return
     end
@@ -390,7 +387,7 @@ shadowfiend:Callback(function(spell)
     end
 end)
 
-renew:Callback("tank", function(spell)
+pve_renew:Callback("tank", function(spell)
     if not rotation.settings.use_renew_tank then
         return
     end
@@ -411,7 +408,7 @@ renew:Callback("tank", function(spell)
     end
 end)
 
-prayer_of_mending:Callback("tank", function(spell)
+pve_prayer_of_mending:Callback("tank", function(spell)
     if not rotation.settings.use_prayer_of_mending_tank then
         return
     end
@@ -432,7 +429,7 @@ prayer_of_mending:Callback("tank", function(spell)
     end
 end)
 
-binding_heal:Callback(function(spell)
+pve_binding_heal:Callback(function(spell)
     if not rotation.settings.use_binding_heal then
         return
     end
@@ -449,7 +446,7 @@ binding_heal:Callback(function(spell)
     end
 end)
 
-desperate_prayer:Callback(function(spell)
+pve_desperate_prayer:Callback(function(spell)
     if not rotation.settings.use_desperate_prayer then
         return
     end
@@ -461,7 +458,7 @@ desperate_prayer:Callback(function(spell)
     end
 end)
 
-power_infusion:Callback(function(spell)
+pve_power_infusion:Callback(function(spell)
     awful.fullGroup.within(40).filter(unit_filter).loop(function(friend)
         if not friend then
             return
@@ -519,7 +516,7 @@ power_infusion:Callback(function(spell)
     end)
 end)
 
-hymn_of_hope:Callback(function(spell)
+pve_hymn_of_hope:Callback(function(spell)
     if not is_boss(target) then
         return
     end
@@ -531,3 +528,4 @@ hymn_of_hope:Callback(function(spell)
         end
     end
 end)
+
