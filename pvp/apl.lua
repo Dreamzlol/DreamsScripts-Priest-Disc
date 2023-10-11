@@ -67,5 +67,3 @@ function rotation.apl_pvp()
     disc.power_word_fortitude()
     disc.smite()
 end
-
-return rotation.apl_pvp

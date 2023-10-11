@@ -7,21 +7,19 @@ if awful.player.class2 ~= "PRIEST" then
 end
 
 awful.print("|cffFFFFFFDreams{ |cff00B5FFScripts |cffFFFFFF} - Disc Loaded!")
-awful.print("|cffFFFFFFDreams{ |cff00B5FFScripts |cffFFFFFF} - Version: 2.0.0")
+awful.print("|cffFFFFFFDreams{ |cff00B5FFScripts |cffFFFFFF} - Version: 2.0.4")
 
 disc:Init(function()
     if rotation.settings.mode ~= current_mode then
         current_mode = rotation.settings.mode
-        if rotation.settings.mode == "PvE" then
-            awful.print("|cffFFFFFFDreams{ |cff00B5FFScripts |cffFFFFFF} - Roation Mode: PvE")
-        elseif rotation.settings.mode == "PvP" then
-            awful.print("|cffFFFFFFDreams{ |cff00B5FFScripts |cffFFFFFF} - Roation Mode: PvP")
-        end
+        local mode = "|cffFFFFFFDreams{ |cff00B5FFScripts |cffFFFFFF} - Roation Mode: " .. current_mode
+        awful.print(mode)
     end
 
-    if rotation.settings.mode == "PvE" then
+    if (rotation.settings.mode == "PvE") then
         rotation.apl_pve()
-    elseif rotation.settings.mode == "PvP" then
+    end
+    if (rotation.settings.mode == "PvP") then
         rotation.apl_pvp()
     end
 end, 0.05)

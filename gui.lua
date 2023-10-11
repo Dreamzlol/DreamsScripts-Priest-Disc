@@ -105,8 +105,8 @@ mode:Dropdown({
     var = "mode",
     tooltip = "Select the Rotation Mode.",
     options = {
-        { label = "PvE", value = "PvE", tooltip = "Use PvE Rotation" },
-        { label = "PvP", value = "PvP", tooltip = "Use PvP Rotation" },
+        { label = awful.textureEscape(48066, 16) .. " PvE", value = "PvE", tooltip = "Use PvE Rotation" },
+        { label = awful.textureEscape(48158, 16) .. " PvP", value = "PvP", tooltip = "Use PvP Rotation" },
     },
     placeholder = "None",
     header = "Select Rotation Mode",

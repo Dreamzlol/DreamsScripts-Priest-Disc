@@ -358,7 +358,7 @@ pve_flash_heal:Callback(function(spell)
     if not friend.debuff("Weakened Soul") then
         return
     end
-    if not penance.cooldown == 0 then
+    if not pve_penance.cooldown == 0 then
         return
     end
     if friend.hp < rotation.settings.flash_heal_hp then
@@ -528,4 +528,3 @@ pve_hymn_of_hope:Callback(function(spell)
         end
     end
 end)
-

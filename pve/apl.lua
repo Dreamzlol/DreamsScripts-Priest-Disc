@@ -37,5 +37,3 @@ function rotation.apl_pve()
     disc.pve_renew("tank")
     disc.pve_power_word_shield("pre")
 end
-
-return rotation.apl_pve
