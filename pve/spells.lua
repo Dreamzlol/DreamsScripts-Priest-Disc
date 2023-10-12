@@ -491,12 +491,12 @@ pve_holy_fire:Callback(function(spell)
 end)
 
 pve_shadow_word_death:Callback("web wrap", function(spell)
-    awful.enemies.loop(function(enemy)
-        if not enemy.name == "Web Wrap" then
+    awful.units.loop(function(obj)
+        if not obj then
             return
         end
-        if enemy.name == "Web Wrap" then
-            if spell:Cast(enemy) then
+        if obj.name == "Web Wrap" then
+            if spell:Cast(obj) then
                 awful.alert(spell.name .. " (Web Wrap)", spell.id)
                 return
             end
