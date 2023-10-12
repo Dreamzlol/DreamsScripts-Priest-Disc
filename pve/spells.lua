@@ -467,50 +467,53 @@ pve_power_infusion:Callback(function(spell)
             return
         end
 
-        -- Execute Phase
-        if friend.name == rotation.settings.power_infusion and rotation.settings.power_infusion_conditions.execute then
-            if friend.buff("Bloodlust") or friend.buff("Heroism") then
-                return
+        -- Check if power_infusion_conditions is not nil before accessing its properties
+        if rotation.settings.power_infusion_conditions then
+            -- Execute Phase
+            if friend.name == rotation.settings.power_infusion and rotation.settings.power_infusion_conditions.execute then
+                if friend.buff("Bloodlust") or friend.buff("Heroism") then
+                    return
+                end
+                if is_boss(target) and not target.dead and target.hp < 20 then
+                    if spell:Cast(friend) then
+                        awful.alert(spell.name, spell.id)
+                        return
+                    end
+                end
             end
-            if is_boss(target) and not target.dead and target.hp < 20 then
+
+            -- after Bloodlust
+            if friend.name == rotation.settings.power_infusion and rotation.settings.power_infusion_conditions.bloodlust then
+                if (friend.buff("Bloodlust") and friend.buffRemains("Bloodlust") <= 0.5) or (friend.buff("Heroism") and friend.buffRemains("Heroism") <= 0.5) then
+                    if spell:Cast(friend) then
+                        awful.alert(spell.name, spell.id)
+                        return
+                    end
+                end
+            end
+
+            -- Pull
+            if friend.name == rotation.settings.power_infusion and rotation.settings.power_infusion_conditions.pull then
+                if friend.buff("Bloodlust") or friend.buff("Heroism") then
+                    return
+                end
+                if is_boss(target) and not target.dead and target.hp >= 80 then
+                    if spell:Cast(friend) then
+                        awful.alert(spell.name, spell.id)
+                        return
+                    end
+                end
+            end
+
+            -- On CD
+            if friend.name == rotation.settings.power_infusion and rotation.settings.power_infusion_conditions.on_cd then
+                if friend.buff("Bloodlust") or friend.buff("Heroism") then
+                    return
+                end
                 if spell:Cast(friend) then
                     awful.alert(spell.name, spell.id)
                     return
                 end
-            end
-        end
-
-        -- after Bloodlust
-        if friend.name == rotation.settings.power_infusion and rotation.settings.power_infusion_conditions.bloodlust then
-            if (friend.buff("Bloodlust") and friend.buffRemains("Bloodlust") <= 0.5) or (friend.buff("Heroism") and friend.buffRemains("Heroism") <= 0.5) then
-                if spell:Cast(friend) then
-                    awful.alert(spell.name, spell.id)
-                    return
-                end
-            end
-        end
-
-        -- Pull
-        if friend.name == rotation.settings.power_infusion and rotation.settings.power_infusion_conditions.pull then
-            if friend.buff("Bloodlust") or friend.buff("Heroism") then
-                return
-            end
-            if is_boss(target) and not target.dead and target.hp >= 80 then
-                if spell:Cast(friend) then
-                    awful.alert(spell.name, spell.id)
-                    return
-                end
-            end
-        end
-
-        -- On CD
-        if friend.name == rotation.settings.power_infusion and rotation.settings.power_infusion_conditions.on_cd then
-            if friend.buff("Bloodlust") or friend.buff("Heroism") then
-                return
-            end
-            if spell:Cast(friend) then
-                awful.alert(spell.name, spell.id)
-                return
             end
         end
     end)
