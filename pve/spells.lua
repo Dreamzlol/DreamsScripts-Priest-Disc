@@ -460,6 +460,23 @@ pve_mind_blast:Callback(function(spell)
     end
 end)
 
+pve_mind_blast:Callback("web wrap", function(spell)
+    if player.debuff("Web Wrap") then
+        return
+    end
+    awful.units.loop(function(obj)
+        if not obj then
+            return
+        end
+        if obj.name == "Web Wrap" then
+            if spell:Cast(obj) then
+                awful.alert(spell.name .. " (Web Wrap)", spell.id)
+                return
+            end
+        end
+    end)
+end)
+
 pve_holy_fire:Callback(function(spell)
     if not rotation.settings.use_damage_gamma then
         return
@@ -490,7 +507,27 @@ pve_holy_fire:Callback(function(spell)
     end
 end)
 
+pve_holy_fire:Callback("web wrap", function(spell)
+    if player.debuff("Web Wrap") then
+        return
+    end
+    awful.units.loop(function(obj)
+        if not obj then
+            return
+        end
+        if obj.name == "Web Wrap" then
+            if spell:Cast(obj) then
+                awful.alert(spell.name .. " (Web Wrap)", spell.id)
+                return
+            end
+        end
+    end)
+end)
+
 pve_shadow_word_death:Callback("web wrap", function(spell)
+    if player.debuff("Web Wrap") then
+        return
+    end
     awful.units.loop(function(obj)
         if not obj then
             return

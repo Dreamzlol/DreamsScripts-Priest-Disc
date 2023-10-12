@@ -27,6 +27,8 @@ function rotation.apl_pve()
     disc.pve_desperate_prayer()
     disc.pve_power_word_shield("tank")
     disc.pve_shadow_word_death("web wrap") -- Dungeon Logic
+    disc.pve_mind_blast("web wrap") -- Dungeon Logic
+    disc.pve_holy_fire("web wrap") -- Dungeon Logic
     disc.pve_penance("tank")
     disc.pve_prayer_of_mending("tank")
     disc.pve_power_word_shield()
