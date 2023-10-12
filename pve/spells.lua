@@ -23,6 +23,7 @@ awful.Populate({
     pve_smite             = Spell(48123, { damage = "magic" }),
     pve_mind_blast        = Spell(48127, { damage = "magic" }),
     pve_holy_fire         = Spell(48135, { damage = "magic" }),
+    pve_shadow_word_death = Spell(48158, { ignoreFacing = true, ignoreCasting = true, ignoreChanneling = true }),
 }, disc, getfenv(1))
 
 local spell_stop_casting = awful.unlock("SpellStopCasting")
@@ -421,7 +422,7 @@ pve_smite:Callback(function(spell)
     if not enemy.combat then
         return
     end
-    if friend.hp > 80 and player.manaPct > 20 then
+    if friend.hp > 80 and player.manaPct > 40 then
         if spell:Cast(enemy) then
             awful.alert(spell.name, spell.id)
             return
@@ -451,7 +452,7 @@ pve_mind_blast:Callback(function(spell)
     if not enemy.combat then
         return
     end
-    if friend.hp > 80 and player.manaPct > 20 then
+    if friend.hp > 80 and player.manaPct > 40 then
         if spell:Cast(enemy) then
             awful.alert(spell.name, spell.id)
             return
@@ -481,12 +482,26 @@ pve_holy_fire:Callback(function(spell)
     if not enemy.combat then
         return
     end
-    if friend.hp > 80 and player.manaPct > 20 then
+    if friend.hp > 80 and player.manaPct > 40 then
         if spell:Cast(enemy) then
             awful.alert(spell.name, spell.id)
             return
         end
     end
+end)
+
+pve_shadow_word_death:Callback("web wrap", function(spell)
+    awful.enemies.loop(function(enemy)
+        if not enemy.name == "Web Wrap" then
+            return
+        end
+        if enemy.name == "Web Wrap" then
+            if spell:Cast(enemy) then
+                awful.alert(spell.name .. " (Web Wrap)", spell.id)
+                return
+            end
+        end
+    end)
 end)
 
 pve_prayer_of_mending:Callback("tank", function(spell)
