@@ -7,7 +7,7 @@ if awful.player.class2 ~= "PRIEST" then
 end
 
 awful.print("|cffFFFFFFDreams{ |cff00B5FFScripts |cffFFFFFF} - Disc Loaded!")
-awful.print("|cffFFFFFFDreams{ |cff00B5FFScripts |cffFFFFFF} - Version: 2.0.4")
+awful.print("|cffFFFFFFDreams{ |cff00B5FFScripts |cffFFFFFF} - Version: 2.0.5")
 
 disc:Init(function()
     if rotation.settings.mode ~= current_mode then

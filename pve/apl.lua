@@ -36,4 +36,7 @@ function rotation.apl_pve()
     disc.pve_binding_heal()
     disc.pve_renew("tank")
     disc.pve_power_word_shield("pre")
+    disc.holy_fire()
+    disc.pve_mind_blast()
+    disc.pve_smite()
 end

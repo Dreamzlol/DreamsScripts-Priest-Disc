@@ -20,6 +20,9 @@ awful.Populate({
     pve_hymn_of_hope      = Spell(64901),
     pve_fear_ward         = Spell(6346, { ignoreCasting = true }),
     pve_mass_dispel       = Spell(32375, { ignoreFacing = true, radius = 15 }),
+    pve_smite             = Spell(48123, { damage = "magic" }),
+    pve_mind_blast        = Spell(48127, { damage = "magic" }),
+    pve_holy_fire         = Spell(48135, { damage = "magic" }),
 }, disc, getfenv(1))
 
 local spell_stop_casting = awful.unlock("SpellStopCasting")
@@ -265,16 +268,12 @@ pve_power_word_shield:Callback("tank", function(spell)
     if not is_tank(friend) then
         return
     end
-    if friend.buff("Power Word: Shield") then
-        return
-    end
-    if friend.debuff("Weakened Soul") then
-        return
-    end
-    if friend.hp < rotation.settings.power_word_shield_tank_safe_hp then
-        if spell:Cast(friend) then
-            awful.alert(spell.name .. " (Tank)", spell.id)
-            return
+    if not friend.buff("Power Word: Shield") and not friend.debuff("Weakened Soul") then
+        if friend.hp < rotation.settings.power_word_shield_tank_safe_hp then
+            if spell:Cast(friend) then
+                awful.alert(spell.name .. " (Tank)", spell.id)
+                return
+            end
         end
     end
 end)
@@ -291,16 +290,12 @@ pve_power_word_shield:Callback(function(spell)
     if is_tank(friend) then
         return
     end
-    if friend.buff("Power Word: Shield") then
-        return
-    end
-    if friend.debuff("Weakened Soul") then
-        return
-    end
-    if friend.hp < rotation.settings.power_word_shield_safe_hp then
-        if spell:Cast(friend) then
-            awful.alert(spell.name .. "(Safe)", spell.id)
-            return
+    if friend and not friend.buff("Power Word: Shield") and not friend.debuff("Weakened Soul") then
+        if friend.hp < rotation.settings.power_word_shield_safe_hp then
+            if spell:Cast(friend) then
+                awful.alert(spell.name .. "(Safe)", spell.id)
+                return
+            end
         end
     end
 end)
@@ -317,15 +312,11 @@ pve_power_word_shield:Callback("pre", function(spell)
         if is_tank(friend) then
             return
         end
-        if friend.buff("Power Word: Shield") then
-            return
-        end
-        if friend.debuff("Weakened Soul") then
-            return
-        end
-        if spell:Cast(friend) then
-            awful.alert(spell.name .. " (Pre Shield)", spell.id)
-            return
+        if not friend.buff("Power Word: Shield") and not friend.debuff("Weakened Soul") then
+            if spell:Cast(friend) then
+                awful.alert(spell.name .. " (Pre Shield)", spell.id)
+                return
+            end
         end
     end)
 end)
@@ -408,6 +399,96 @@ pve_renew:Callback("tank", function(spell)
     end
 end)
 
+pve_smite:Callback(function(spell)
+    if not rotation.settings.use_damage_gamma then
+        return
+    end
+    if not player.buff("Confessor's Wrath") then
+        return
+    end
+
+    local friend = awful.fullGroup.within(40).filter(unit_filter).lowest
+    local enemy = awful.enemies.within(30).filter(unit_filter).lowest
+    if not friend then
+        return
+    end
+    if not enemy then
+        return
+    end
+    if enemy.dead then
+        return
+    end
+    if not enemy.combat then
+        return
+    end
+    if friend.hp > 80 and player.manaPct > 20 then
+        if spell:Cast(enemy) then
+            awful.alert(spell.name, spell.id)
+            return
+        end
+    end
+end)
+
+pve_mind_blast:Callback(function(spell)
+    if not rotation.settings.use_damage_gamma then
+        return
+    end
+    if not player.buff("Confessor's Wrath") then
+        return
+    end
+
+    local friend = awful.fullGroup.within(40).filter(unit_filter).lowest
+    local enemy = awful.enemies.within(30).filter(unit_filter).lowest
+    if not friend then
+        return
+    end
+    if not enemy then
+        return
+    end
+    if enemy.dead then
+        return
+    end
+    if not enemy.combat then
+        return
+    end
+    if friend.hp > 80 and player.manaPct > 20 then
+        if spell:Cast(enemy) then
+            awful.alert(spell.name, spell.id)
+            return
+        end
+    end
+end)
+
+pve_holy_fire:Callback(function(spell)
+    if not rotation.settings.use_damage_gamma then
+        return
+    end
+    if not player.buff("Confessor's Wrath") then
+        return
+    end
+
+    local friend = awful.fullGroup.within(40).filter(unit_filter).lowest
+    local enemy = awful.enemies.within(30).filter(unit_filter).lowest
+    if not friend then
+        return
+    end
+    if not enemy then
+        return
+    end
+    if enemy.dead then
+        return
+    end
+    if not enemy.combat then
+        return
+    end
+    if friend.hp > 80 and player.manaPct > 20 then
+        if spell:Cast(enemy) then
+            awful.alert(spell.name, spell.id)
+            return
+        end
+    end
+end)
+
 pve_prayer_of_mending:Callback("tank", function(spell)
     if not rotation.settings.use_prayer_of_mending_tank then
         return
@@ -463,57 +544,57 @@ pve_power_infusion:Callback(function(spell)
         if not friend then
             return
         end
+        if not friend.combat then
+            return
+        end
         if friend.distance > spell.range then
             return
         end
 
-        -- Check if power_infusion_conditions is not nil before accessing its properties
-        if rotation.settings.power_infusion_conditions then
-            -- Execute Phase
-            if friend.name == rotation.settings.power_infusion and rotation.settings.power_infusion_conditions.execute then
-                if friend.buff("Bloodlust") or friend.buff("Heroism") then
-                    return
-                end
-                if is_boss(target) and not target.dead and target.hp < 20 then
-                    if spell:Cast(friend) then
-                        awful.alert(spell.name, spell.id)
-                        return
-                    end
-                end
+        -- Execute Phase
+        if friend.name == rotation.settings.power_infusion_unit and rotation.settings.power_infusion_conditions["Execute Phase"] then
+            if friend.buff("Bloodlust") or friend.buff("Heroism") then
+                return
             end
-
-            -- after Bloodlust
-            if friend.name == rotation.settings.power_infusion and rotation.settings.power_infusion_conditions.bloodlust then
-                if (friend.buff("Bloodlust") and friend.buffRemains("Bloodlust") <= 0.5) or (friend.buff("Heroism") and friend.buffRemains("Heroism") <= 0.5) then
-                    if spell:Cast(friend) then
-                        awful.alert(spell.name, spell.id)
-                        return
-                    end
-                end
-            end
-
-            -- Pull
-            if friend.name == rotation.settings.power_infusion and rotation.settings.power_infusion_conditions.pull then
-                if friend.buff("Bloodlust") or friend.buff("Heroism") then
-                    return
-                end
-                if is_boss(target) and not target.dead and target.hp >= 80 then
-                    if spell:Cast(friend) then
-                        awful.alert(spell.name, spell.id)
-                        return
-                    end
-                end
-            end
-
-            -- On CD
-            if friend.name == rotation.settings.power_infusion and rotation.settings.power_infusion_conditions.on_cd then
-                if friend.buff("Bloodlust") or friend.buff("Heroism") then
-                    return
-                end
+            if is_boss(target) and not target.dead and target.hp < 20 then
                 if spell:Cast(friend) then
                     awful.alert(spell.name, spell.id)
                     return
                 end
+            end
+        end
+
+        -- after Bloodlust
+        if friend.name == rotation.settings.power_infusion_unit and rotation.settings.power_infusion_conditions["After Bloodlust"] then
+            if (friend.buff("Bloodlust") and friend.buffRemains("Bloodlust") <= 0.5) or (friend.buff("Heroism") and friend.buffRemains("Heroism") <= 0.5) then
+                if spell:Cast(friend) then
+                    awful.alert(spell.name, spell.id)
+                    return
+                end
+            end
+        end
+
+        -- Pull
+        if friend.name == rotation.settings.power_infusion_unit and rotation.settings.power_infusion_conditions["At Boss Pull"] then
+            if friend.buff("Bloodlust") or friend.buff("Heroism") then
+                return
+            end
+            if is_boss(target) and not target.dead and target.hp >= 80 then
+                if spell:Cast(friend) then
+                    awful.alert(spell.name, spell.id)
+                    return
+                end
+            end
+        end
+
+        -- On CD
+        if friend.name == rotation.settings.power_infusion_unit and rotation.settings.power_infusion_conditions["On CD"] then
+            if friend.buff("Bloodlust") or friend.buff("Heroism") then
+                return
+            end
+            if spell:Cast(friend) then
+                awful.alert(spell.name, spell.id)
+                return
             end
         end
     end)

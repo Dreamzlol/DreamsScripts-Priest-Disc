@@ -225,36 +225,28 @@ if names then
 end
 
 spells:Text({
-    text = awful.textureEscape(10060) .. "  Power Infusion:",
+    text = awful.textureEscape(10060) .. "  Power Infusion (Unit)",
 })
 
 spells:Dropdown({
-    var = "power_infusion",
-    tooltip = "Casting Power Infusion on unit",
+    var = "power_infusion_unit",
+    tooltip = "Casting Power Infusion on unit (Reload if you dont see any names in your Group)",
     options = options,
     placeholder = "Select your unit",
 })
 
-local variables = {
-    execute = "Execute Phase",
-    bloodlust = "After Bloodlust",
-    pull = "At Boss Pull",
-    on_cd = "On CD",
-}
-
-local options = {}
-for name, label in pairs(variables) do
-    table.insert(options, { label = label, value = name })
-end
-
-
 spells:Dropdown({
-    var = "powerinfusionConditions",
+    var = "power_infusion_conditions",
     multi = true,
     tooltip = "Choose the conditions under which to cast Power Infusion",
-    options = options,
-    placeholder = "Select conditions",
-    header = "Power Infusion conditions:",
+    options = {
+        { label = "Execute Phase",   value = "Execute Phase" },
+        { label = "After Bloodlust", value = "After Bloodlust" },
+        { label = "At Boss Pull",    value = "At Boss Pull" },
+        { label = "On CD",           value = "On CD", },
+    },
+    placeholder = "Select your conditions",
+    header = awful.textureEscape(10060) .. " Power Infusion (Conditions)",
     default = { "Execute", "Bloodlust", "Pull" }
 })
 
@@ -379,6 +371,13 @@ toggles:Checkbox({
     text = "Use Cure Disease",
     var = "use_cure_disease",
     tooltip = "Use Cure Disease on unit that has a Disease",
+    default = true
+})
+
+toggles:Checkbox({
+    text = "Use Damage Spells (Gamma Dungeons)",
+    var = "use_damage_gamma",
+    tooltip = "Use Damage Spells in Gamma Dungeons on lowest unit if you have the Confessor's Wrath Buff active",
     default = true
 })
 
