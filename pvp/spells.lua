@@ -7,6 +7,10 @@ if player.class2 ~= "PRIEST" then
     return
 end
 
+if not (rotation.settings.mode == "PvP") then
+    return
+end
+
 awful.Populate({
     fear_ward            = Spell(6346),
     desperate_prayer     = Spell(48173, { ignoreMoving = true, beneficial = true }),

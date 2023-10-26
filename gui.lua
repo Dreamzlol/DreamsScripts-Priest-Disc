@@ -51,7 +51,7 @@ status_frame:Button({
 status_frame:Button({
     spellId = 988,
     var = "use_dispel_magic",
-    text = "Dispel Magic",
+    text = "Dispel",
     size = 30
 })
 
@@ -209,30 +209,13 @@ spells:Slider({
     tooltip = "Use Shadowfiend on enemy target if you have %MP or less"
 })
 
-local names = {}
-awful.fullGroup.loop(function(friend)
-    table.insert(names, friend.name)
-end)
-
-local options = {
-    { label = "None", value = "None", tooltip = "Casting Power Infusion on selected unit" },
-}
-
-if names then
-    for i, name in ipairs(names) do
-        table.insert(options, { label = name, value = name, tooltip = "Casting Power Infusion on selected unit" })
-    end
-end
-
 spells:Text({
     text = awful.textureEscape(10060) .. "  Power Infusion (Unit)",
 })
 
-spells:Dropdown({
-    var = "power_infusion_unit",
-    tooltip = "Casting Power Infusion on unit (Reload if you dont see any names in your Group)",
-    options = options,
-    placeholder = "Select your unit",
+spells:Text({
+    text = "Set  your  Focus  on  the  unit  you  want  too  cast  Power  Infusion.",
+    paddingBottom = 10,
 })
 
 spells:Dropdown({
@@ -247,7 +230,7 @@ spells:Dropdown({
     },
     placeholder = "Select your conditions",
     header = awful.textureEscape(10060) .. " Power Infusion (Conditions)",
-    default = { "Execute", "Bloodlust", "Pull" }
+    default = { "Execute Phase", "After Bloodlust", "At Boss Pull" }
 })
 
 spells:Text({

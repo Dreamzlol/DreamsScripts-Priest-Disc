@@ -1,7 +1,7 @@
 local Unlocker, awful, rotation = ...
 local disc = rotation.priest.disc
 local Spell = awful.Spell
-local player, target = awful.player, awful.target
+local player, target, focus = awful.player, awful.target, awful.focus
 
 awful.Populate({
     pve_penance           = Spell(53007, { beneficial = true }),
@@ -61,7 +61,7 @@ local function is_tank(unit)
 end
 
 local function is_boss(unit)
-    return unit.exists and unit.level == -1
+    return unit.exists and unit.level == -1 or (unit.level == 82 and player.buff("Luck of the Draw"))
 end
 
 local mass_dispel_debuff = {
@@ -339,6 +339,7 @@ pve_flash_heal:Callback(function(spell)
     if not rotation.settings.use_flash_heal then
         return
     end
+    if player.casting then return end
     if target.cast == "Ground Tremor" or target.cast == "Flame Jets" then
         return
     end
@@ -592,64 +593,62 @@ pve_desperate_prayer:Callback(function(spell)
 end)
 
 pve_power_infusion:Callback(function(spell)
-    awful.fullGroup.within(40).filter(unit_filter).loop(function(friend)
-        if not friend then
+    if not focus then
+        return
+    end
+    if not focus.combat then
+        return
+    end
+    if focus.distance > spell.range then
+        return
+    end
+
+    -- Execute Phase
+    if rotation.settings.power_infusion_conditions["Execute Phase"] then
+        if focus.buff("Bloodlust") or focus.buff("Heroism") then
             return
         end
-        if not friend.combat then
-            return
-        end
-        if friend.distance > spell.range then
-            return
-        end
-
-        -- Execute Phase
-        if friend.name == rotation.settings.power_infusion_unit and rotation.settings.power_infusion_conditions["Execute Phase"] then
-            if friend.buff("Bloodlust") or friend.buff("Heroism") then
-                return
-            end
-            if is_boss(target) and not target.dead and target.hp < 20 then
-                if spell:Cast(friend) then
-                    awful.alert(spell.name, spell.id)
-                    return
-                end
-            end
-        end
-
-        -- after Bloodlust
-        if friend.name == rotation.settings.power_infusion_unit and rotation.settings.power_infusion_conditions["After Bloodlust"] then
-            if (friend.buff("Bloodlust") and friend.buffRemains("Bloodlust") <= 0.5) or (friend.buff("Heroism") and friend.buffRemains("Heroism") <= 0.5) then
-                if spell:Cast(friend) then
-                    awful.alert(spell.name, spell.id)
-                    return
-                end
-            end
-        end
-
-        -- Pull
-        if friend.name == rotation.settings.power_infusion_unit and rotation.settings.power_infusion_conditions["At Boss Pull"] then
-            if friend.buff("Bloodlust") or friend.buff("Heroism") then
-                return
-            end
-            if is_boss(target) and not target.dead and target.hp >= 80 then
-                if spell:Cast(friend) then
-                    awful.alert(spell.name, spell.id)
-                    return
-                end
-            end
-        end
-
-        -- On CD
-        if friend.name == rotation.settings.power_infusion_unit and rotation.settings.power_infusion_conditions["On CD"] then
-            if friend.buff("Bloodlust") or friend.buff("Heroism") then
-                return
-            end
-            if spell:Cast(friend) then
+        if is_boss(target) and not target.dead and target.hp < 20 then
+            if spell:Cast(focus) then
                 awful.alert(spell.name, spell.id)
                 return
             end
         end
-    end)
+    end
+
+    -- after Bloodlust
+    if rotation.settings.power_infusion_conditions["After Bloodlust"] then
+        if (focus.buff("Bloodlust") and focus.buffRemains("Bloodlust") <= 0.5) or (focus.buff("Heroism") and focus.buffRemains("Heroism") <= 0.5) then
+            if spell:Cast(focus) then
+                awful.alert(spell.name, spell.id)
+                return
+            end
+        end
+    end
+
+    -- Pull
+    if rotation.settings.power_infusion_conditions["At Boss Pull"] then
+        if focus.buff("Bloodlust") or focus.buff("Heroism") then
+            return
+        end
+        if is_boss(target) and not target.dead and target.hp >= 80 then
+            if spell:Cast(focus) then
+                awful.alert(spell.name, spell.id)
+                return
+            end
+        end
+    end
+
+    -- On CD
+    if rotation.settings.power_infusion_conditions["On CD"] then
+        if focus.buff("Bloodlust") or focus.buff("Heroism") then
+            return
+        end
+        if spell:Cast(focus) then
+            awful.alert(spell.name, spell.id)
+            return
+        end
+    end
 end)
 
 pve_hymn_of_hope:Callback(function(spell)
