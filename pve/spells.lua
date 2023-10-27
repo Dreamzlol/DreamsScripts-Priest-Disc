@@ -32,6 +32,19 @@ local function unit_filter(obj)
     return obj.los and not obj.dead
 end
 
+local wasCasting = {}
+function disc.WasCastingCheck()
+    local time = awful.time
+    if player.casting then
+        wasCasting[player.castingid] = time
+    end
+    for spell, when in pairs(wasCasting) do
+        if time - when > 0.100 + awful.buffer then
+            wasCasting[spell] = nil
+        end
+    end
+end
+
 local tank_buffs = {
     ["Flask of Stoneblood"] = true,
     ["Shield Wall"] = true,
@@ -339,7 +352,7 @@ pve_flash_heal:Callback(function(spell)
     if not rotation.settings.use_flash_heal then
         return
     end
-    if player.casting then return end
+    if wasCasting[spell.id] then return end
     if target.cast == "Ground Tremor" or target.cast == "Flame Jets" then
         return
     end

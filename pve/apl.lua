@@ -16,7 +16,7 @@ function rotation.apl_pve()
             return
         end
     end
-
+    disc.WasCastingCheck()
     disc.pve_inner_fire()
     disc.pve_fear_ward()
     disc.pve_mass_dispel()
