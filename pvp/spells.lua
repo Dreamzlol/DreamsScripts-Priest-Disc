@@ -461,6 +461,7 @@ end)
 
 holy_nova:Callback("stealth", function(spell)
     awful.enemies.loop(function(enemy)
+        if not enemy then return end
         if enemy.buff(51713) then
             return
         end
